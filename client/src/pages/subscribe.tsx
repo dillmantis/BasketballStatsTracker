@@ -108,6 +108,22 @@ function SubscribeContent() {
     );
   }
 
+  if (!stripePromise) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-black text-gray-800 mb-4">Subscription Setup Required</h1>
+            <p className="text-xl text-gray-600 mb-8">
+              Payment processing is not yet configured. Please contact support to enable subscriptions.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!clientSecret) {
     return (
       <div className="min-h-screen bg-gray-50">
