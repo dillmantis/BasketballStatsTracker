@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* NBA-themed colors */
+  --nba-red: hsl(355, 85%, 45%);
+  --nba-blue: hsl(215, 69%, 38%);
+  --nba-gold: hsl(43, 96%, 55%);
+  --charcoal: hsl(217, 19%, 27%);
+  --slate-gray: hsl(218, 11%, 35%);
+  
+  /* Chart colors */
+  --chart-1: hsl(355, 85%, 45%);
+  --chart-2: hsl(215, 69%, 38%);
+  --chart-3: hsl(43, 96%, 55%);
+  --chart-4: hsl(142, 76%, 36%);
+  --chart-5: hsl(262, 83%, 58%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+  
+  /* NBA-themed colors for dark mode */
+  --nba-red: hsl(355, 85%, 55%);
+  --nba-blue: hsl(215, 69%, 48%);
+  --nba-gold: hsl(43, 96%, 65%);
+  --charcoal: hsl(217, 19%, 37%);
+  --slate-gray: hsl(218, 11%, 45%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .nba-red {
+    color: var(--nba-red);
+  }
+  
+  .bg-nba-red {
+    background-color: var(--nba-red);
+  }
+  
+  .nba-blue {
+    color: var(--nba-blue);
+  }
+  
+  .bg-nba-blue {
+    background-color: var(--nba-blue);
+  }
+  
+  .nba-gold {
+    color: var(--nba-gold);
+  }
+  
+  .bg-nba-gold {
+    background-color: var(--nba-gold);
+  }
+  
+  .text-charcoal {
+    color: var(--charcoal);
+  }
+  
+  .bg-charcoal {
+    background-color: var(--charcoal);
+  }
+  
+  .text-slate-gray {
+    color: var(--slate-gray);
+  }
+  
+  .bg-slate-gray {
+    background-color: var(--slate-gray);
+  }
+}
