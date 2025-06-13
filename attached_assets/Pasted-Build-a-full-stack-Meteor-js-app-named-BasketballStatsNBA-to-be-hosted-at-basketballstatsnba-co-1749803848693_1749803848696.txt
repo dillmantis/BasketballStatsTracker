@@ -1,0 +1,82 @@
+Build a full-stack Meteor.js app named **BasketballStatsNBA** to be hosted at `basketballstatsnba.com`. This is a fantasy basketball web app that includes real-time and historical NBA statistics, user account management, financial subscriptions via Stripe, and an interactive dashboard.
+
+### TECHNOLOGY STACK:
+- **Meteor.js** for the full-stack framework.
+- **React** for the front-end with **Tailwind CSS** and **Flowbite** UI components.
+- **Chart.js** for rendering player and team statistics visually.
+- **MongoDB** (default with Meteor) for data persistence.
+- **Stripe** for payments, subscriptions, tipping, and bet handling.
+- Hosted on a **cloud Ubuntu Server** (assume Linux deployment compatibility).
+
+---
+
+### 🔍 DATA INTEGRATION:
+1. **NBA Data (Live + Historic):**
+   - Integrate **NBA API via RapidAPI** for real-time stats: teams, games, players, scores, schedules.
+   - Include a modular **data scraper** (Python preferred) using [`swar/nba_api`](https://github.com/swar/nba_api) or a headless browser like Puppeteer for historical stats.
+   - Add a toggle system to **activate or deactivate scraping**, and allow **scheduling via cron jobs** to import historic stats nightly.
+   - Store all stats in MongoDB for efficient access and reactivity.
+
+2. **Fantasy Engine:**
+   - Implement user fantasy leagues, with functionality to:
+     - Create and manage leagues
+     - Draft or pick fantasy players
+     - Calculate fantasy scores based on real NBA stats
+     - Track live league standings
+
+---
+
+### 🔐 USER AUTHENTICATION:
+- Use Meteor’s `accounts-password` for secure login and registration.
+- Add `alanning:roles` for admin, standard, and subscriber roles.
+- Enable OAuth integrations (Google, Facebook) for easy signup.
+- Include optional **2FA** setup with email or SMS.
+
+---
+
+### 💳 PAYMENTS & SUBSCRIPTIONS:
+- Integrate **Stripe** to:
+   - Handle paid subscription plans
+   - Process tips or donations
+   - Facilitate bet-based entry fees or prize distribution
+- Provide admin dashboard to manage transactions and payout settings.
+- Log all transactions securely and clearly in MongoDB with references to user accounts.
+
+---
+
+### 📊 UI & VISUALIZATION:
+- Use **React components** styled with **Tailwind CSS** and enhanced with **Flowbite** components.
+- Use **Chart.js** to display:
+   - Player performance graphs
+   - Historical team statistics
+   - Fantasy league standings
+
+---
+
+### 🔧 DEV TOOLS & MONITORING:
+- Include admin dashboard with:
+   - Stat update logs
+   - Scraper status
+   - Manual sync triggers for the API
+- Use **cron job scheduling** on the Ubuntu server for:
+   - Historical stat updates (daily)
+   - Weekly league score recalculations
+- Use **Monti APM** or another APM solution for monitoring Meteor performance.
+- Add rate limiting and basic brute force protection.
+
+---
+
+### 🌐 DEPLOYMENT TARGET:
+- Prepare for deployment to an **Ubuntu-based cloud server**.
+- Provide setup scripts or instructions to:
+   - Install Meteor
+   - Configure Nginx or Caddy for reverse proxy and SSL
+   - Set environment variables for MongoDB, Stripe, and RapidAPI keys
+   - Deploy Meteor bundle using `pm2` or similar process manager
+
+---
+
+### 📦 OPTIONAL FEATURES:
+- Allow admin to upload CSVs or JSON to manually import legacy stats.
+- Add newsletter subscription integration (e.g., Mailchimp) for fantasy league updates.
+- Enable Discord or Slack bot integration for game alerts or league updates.
