@@ -152,13 +152,19 @@ export class DatabaseStorage implements IStorage {
 
   // Player stats operations
   async getPlayerStats(playerId: number, season?: string): Promise<PlayerStats[]> {
-    let query = db.select().from(playerStats).where(eq(playerStats.playerId, playerId));
-    
     if (season) {
-      query = query.where(and(eq(playerStats.playerId, playerId), eq(playerStats.season, season)));
+      return await db
+        .select()
+        .from(playerStats)
+        .where(and(eq(playerStats.playerId, playerId), eq(playerStats.season, season)))
+        .orderBy(desc(playerStats.season));
     }
     
-    return await query.orderBy(desc(playerStats.season));
+    return await db
+      .select()
+      .from(playerStats)
+      .where(eq(playerStats.playerId, playerId))
+      .orderBy(desc(playerStats.season));
   }
 
   async createPlayerStats(stats: InsertPlayerStats): Promise<PlayerStats> {
@@ -185,12 +191,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getLeaguesByUser(userId: string): Promise<League[]> {
-    return await db
-      .select()
+    const results = await db
+      .select({ leagues })
       .from(leagues)
       .innerJoin(fantasyTeams, eq(leagues.id, fantasyTeams.leagueId))
       .where(and(eq(fantasyTeams.userId, userId), eq(leagues.isActive, true)))
       .orderBy(desc(leagues.createdAt));
+    
+    return results.map(result => result.leagues);
   }
 
   async getLeague(id: number): Promise<League | undefined> {
@@ -257,13 +265,19 @@ export class DatabaseStorage implements IStorage {
 
   // Matchup operations
   async getMatchupsByLeague(leagueId: number, week?: number): Promise<Matchup[]> {
-    let query = db.select().from(matchups).where(eq(matchups.leagueId, leagueId));
-    
     if (week) {
-      query = query.where(and(eq(matchups.leagueId, leagueId), eq(matchups.week, week)));
+      return await db
+        .select()
+        .from(matchups)
+        .where(and(eq(matchups.leagueId, leagueId), eq(matchups.week, week)))
+        .orderBy(matchups.week);
     }
     
-    return await query.orderBy(matchups.week);
+    return await db
+      .select()
+      .from(matchups)
+      .where(eq(matchups.leagueId, leagueId))
+      .orderBy(matchups.week);
   }
 
   async createMatchup(matchup: InsertMatchup): Promise<Matchup> {

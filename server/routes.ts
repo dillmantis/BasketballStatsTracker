@@ -9,13 +9,13 @@ import {
   insertPlayerStatsSchema 
 } from "@shared/schema";
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+// Initialize Stripe only if the secret key is available
+let stripe: Stripe | null = null;
+if (process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== '') {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: "2025-05-28.basil",
+  });
 }
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
-});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -208,6 +208,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Stripe subscription route
   app.post('/api/get-or-create-subscription', isAuthenticated, async (req: any, res) => {
+    if (!stripe) {
+      return res.status(500).json({ 
+        message: "Stripe not configured. Please add STRIPE_SECRET_KEY environment variable." 
+      });
+    }
+
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
@@ -218,9 +224,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (user.stripeSubscriptionId) {
         const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
+        const invoice = subscription.latest_invoice;
+        let clientSecret = null;
+        
+        if (invoice && typeof invoice === 'object' && invoice.payment_intent) {
+          const paymentIntent = invoice.payment_intent;
+          clientSecret = typeof paymentIntent === 'object' ? paymentIntent.client_secret : null;
+        }
+        
         return res.json({
           subscriptionId: subscription.id,
-          clientSecret: subscription.latest_invoice?.payment_intent?.client_secret,
+          clientSecret,
         });
       }
       
@@ -243,10 +257,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       await storage.updateUserStripeInfo(userId, customer.id, subscription.id);
+      
+      const invoice = subscription.latest_invoice;
+      let clientSecret = null;
+      
+      if (invoice && typeof invoice === 'object' && invoice.payment_intent) {
+        const paymentIntent = invoice.payment_intent;
+        clientSecret = typeof paymentIntent === 'object' ? paymentIntent.client_secret : null;
+      }
   
       res.json({
         subscriptionId: subscription.id,
-        clientSecret: subscription.latest_invoice?.payment_intent?.client_secret,
+        clientSecret,
       });
     } catch (error: any) {
       console.error("Stripe subscription error:", error);
@@ -256,6 +278,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Stripe one-time payment route
   app.post("/api/create-payment-intent", async (req, res) => {
+    if (!stripe) {
+      return res.status(500).json({ 
+        message: "Stripe not configured. Please add STRIPE_SECRET_KEY environment variable." 
+      });
+    }
+
     try {
       const { amount } = req.body;
       const paymentIntent = await stripe.paymentIntents.create({
